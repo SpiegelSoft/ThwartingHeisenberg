@@ -54,7 +54,7 @@
 					let xBasis = [PauliX];
 					let zBasis = [PauliZ];
 					let aliceZMeasurement = Measure(zBasis, [aliceQubit]);
-					let bobXMeasurement = Measure(xBasis, [bobQubit]);
+					//let bobXMeasurement = Measure(xBasis, [bobQubit]);
 					let bobZMeasurement = Measure(zBasis, [bobQubit]);
 					if (aliceZMeasurement == bobZMeasurement) 
 					{
@@ -66,10 +66,10 @@
 						set aliceOnesInZDirection = aliceOnesInZDirection + 1;
 					}
 					
-					if (bobXMeasurement == One)
-					{
-						set bobOnesInXDirection = bobOnesInXDirection + 1;
-					}
+					//if (bobXMeasurement == One)
+					//{
+					//	set bobOnesInXDirection = bobOnesInXDirection + 1;
+					//}
 
 					Reset(qubits[0]);
 					Reset(qubits[1]);
