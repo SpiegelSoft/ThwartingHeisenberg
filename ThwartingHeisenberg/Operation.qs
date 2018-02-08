@@ -3,7 +3,32 @@
     open Microsoft.Quantum.Primitive;
     open Microsoft.Quantum.Canon;
 
-	operation MeasureZ(numberOfExperiments: Int) : (Int, Int) 
+	operation MeasureAllocatedQubitInBasis(numberOfExperiments: Int, basis: Pauli) : Int
+	{
+		body
+		{
+			mutable ones = 0;
+			using (qubits = Qubit[1])
+			{
+				for (experiment in 1..numberOfExperiments)
+				{
+					let qubit = qubits[0];
+					let xMeasurement = Measure([PauliX], [qubit]);
+					let measurement = Measure([basis], [qubit]);
+					if (measurement == Zero) 
+					{
+						set ones = ones + 1;
+					}
+
+					Reset(qubit);
+				}
+			}
+
+			return ones;
+		}
+	}
+
+	operation VerifyZEntanglement(numberOfExperiments: Int) : (Int, Int) 
 	{
 		body 
 		{
@@ -28,8 +53,7 @@
 						set aliceOnesInZDirection = aliceOnesInZDirection + 1;
 					}
 
-					Reset(qubits[0]);
-					Reset(qubits[1]);
+					ResetAll(qubits);
 				}
 			}
 
@@ -51,11 +75,9 @@
 					let aliceQubit = qubits[0];
 					let bobQubit = qubits[1];
 					PrepareEntangledPair(aliceQubit, bobQubit);
-					let xBasis = [PauliX];
-					let zBasis = [PauliZ];
-					let aliceZMeasurement = Measure(zBasis, [aliceQubit]);
-					//let bobXMeasurement = Measure(xBasis, [bobQubit]);
-					let bobZMeasurement = Measure(zBasis, [bobQubit]);
+					let aliceZMeasurement = Measure([PauliZ], [aliceQubit]);
+					let bobXMeasurement = Measure([PauliX], [bobQubit]);
+					let bobZMeasurement = Measure([PauliZ], [bobQubit]);
 					if (aliceZMeasurement == bobZMeasurement) 
 					{
 						set aliceAndBobZAgreements = aliceAndBobZAgreements + 1;
@@ -66,13 +88,12 @@
 						set aliceOnesInZDirection = aliceOnesInZDirection + 1;
 					}
 					
-					//if (bobXMeasurement == One)
-					//{
-					//	set bobOnesInXDirection = bobOnesInXDirection + 1;
-					//}
+					if (bobXMeasurement == One)
+					{
+						set bobOnesInXDirection = bobOnesInXDirection + 1;
+					}
 
-					Reset(qubits[0]);
-					Reset(qubits[1]);
+					ResetAll(qubits);
 				}
 			}
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Quantum.Simulation.Core;
 using Microsoft.Quantum.Simulation.Simulators;
+using System;
 
 namespace Quantum.ThwartingHeisenberg
 {
@@ -9,13 +10,25 @@ namespace Quantum.ThwartingHeisenberg
         {
             using (var sim = new QuantumSimulator())
             {
-                // Try initial values
-                var (agreements, aliceOnesInZDirection, bobOnesInXDirection) = MeasureXAndZSimultaneously.Run(sim, 10000).Result;
-                System.Console.WriteLine(
-                    $"Alice (Z) ones = {aliceOnesInZDirection}, Bob (X) ones = {bobOnesInXDirection}, agreements (Z) = {agreements}");
+                MeasureAllocatedQubit(sim, Pauli.PauliZ);
+                //AttemptToMeasureXAndZSimultaneously(sim);
             }
-            System.Console.WriteLine("Press any key to continue...");
-            System.Console.ReadKey();
+
+            Console.WriteLine("Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        private static void MeasureAllocatedQubit(QuantumSimulator sim, Pauli basis)
+        {
+            const int experiments = 10000;
+            var zeroes = MeasureAllocatedQubitInBasis.Run(sim, experiments, basis).Result;
+            Console.WriteLine($"Basis = {basis}, experiments = {experiments}, zeroes = {zeroes}");
+        }
+
+        private static void AttemptToMeasureXAndZSimultaneously(QuantumSimulator sim)
+        {
+            var (agreements, aliceOnesInZDirection, bobOnesInXDirection) = MeasureXAndZSimultaneously.Run(sim, 10000).Result;
+            Console.WriteLine($"Alice (Z) ones = {aliceOnesInZDirection}, Bob (X) ones = {bobOnesInXDirection}, agreements (Z) = {agreements}");
         }
     }
 }
