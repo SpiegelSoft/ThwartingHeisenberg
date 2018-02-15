@@ -10,7 +10,7 @@ namespace Quantum.ThwartingHeisenberg
         {
             using (var sim = new QuantumSimulator())
             {
-                MeasureAllocatedQubit(sim, Pauli.PauliZ);
+                MeasureAllocatedQubit(sim, Pauli.PauliX);
                 //AttemptToMeasureXAndZSimultaneously(sim);
             }
 

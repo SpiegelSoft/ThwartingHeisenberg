@@ -7,24 +7,24 @@
 	{
 		body
 		{
-			mutable ones = 0;
+			mutable zeroes = 0;
 			using (qubits = Qubit[1])
 			{
 				for (experiment in 1..numberOfExperiments)
 				{
 					let qubit = qubits[0];
-					let xMeasurement = Measure([PauliX], [qubit]);
+					H(qubit);
 					let measurement = Measure([basis], [qubit]);
 					if (measurement == Zero) 
 					{
-						set ones = ones + 1;
+						set zeroes = zeroes + 1;
 					}
 
 					Reset(qubit);
 				}
 			}
 
-			return ones;
+			return zeroes;
 		}
 	}
 
